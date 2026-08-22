@@ -9,23 +9,37 @@ select { flex:0 0 auto; }
 input { flex:1; min-width:0; }
 button { padding:8px 12px; background:#d40000; color:white; border:none; border-radius:4px; }
 iframe { width:100%; height:calc(100vh - 56px); border:none; display:block; }
+.info { padding:10px; font-size:13px; color:#666; }
 </style>
 </head>
 <body>
 <div class="toolbar">
 <select id="kurir" onchange="gantiKurir()">
-<option value="https://www.jet.co.id/track">J&T</option>
-<option value="https://jne.co.id/tracking-package">JNE</option>
-<option value="https://www.sicepat.com/">SiCepat</option>
+<option value="https://www.jet.co.id/track" data-embed="1">J&T</option>
+<option value="https://www.jne.co.id/id/tracking/trace" data-embed="1">JNE</option>
+<option value="https://www.sicepat.com/checkAwb" data-embed="0">SiCepat</option>
 </select>
 <input type="text" id="resi" placeholder="Nomor resi">
 <button onclick="copyResi()">Copy</button>
 </div>
 <iframe id="frame" src="https://www.jet.co.id/track"></iframe>
+<div id="info" class="info" style="display:none;"></div>
 <script>
 function gantiKurir() {
-  var url = document.getElementById("kurir").value;
-  document.getElementById("frame").src = url;
+  var opt = document.getElementById("kurir");
+  var url = opt.value;
+  var embed = opt.options[opt.selectedIndex].getAttribute("data-embed");
+  var frame = document.getElementById("frame");
+  var info = document.getElementById("info");
+  if (embed === "1") {
+    frame.style.display = "block";
+    info.style.display = "none";
+    frame.src = url;
+  } else {
+    frame.style.display = "none";
+    info.style.display = "block";
+    info.innerHTML = "Kurir ini tidak bisa ditampilkan di dalam halaman. <a href='" + url + "' target='_blank'>Buka di tab baru</a>";
+  }
 }
 function copyResi() {
   var resi = document.getElementById("resi").value.trim();
